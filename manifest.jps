@@ -19,16 +19,19 @@ nodes:
     nodeGroup: cp
     volumes:
       - /etc/docker/registry
+      - /var/lib/registry
 
 onInstall:
   - cmd[cp]:
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
-    - htpasswd -cB ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
+    - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
+
+  - api [cp]: jelastic.environment.control.RestartNodesByGroup
 
 success: |
-  # Your Docker Registry is ready
+  Your Docker Registry will be ready in about 10 minutes.
 
-  **URL**: ${env.url}
+  **URL**: ${env.domain}
 
   **Username**: ${globals.REGISTRY_USER}
 
@@ -38,7 +41,7 @@ success: |
 
   ```
   docker pull alpine
-  docker tag alpine ${env.url}/myalpine
-  docker login ${env.url} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
-  docker push ${env.url}/myalpine
+  docker tag alpine ${env.domain}/myalpine
+  docker login ${env.domain} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
+  docker push ${env.domain}/myalpine
   ```
