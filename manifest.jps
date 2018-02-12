@@ -14,7 +14,7 @@ globals:
 nodes:
   - image: registry:latest
     count: 1
-    fixedCloudlets: 2
+    fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
     volumes:
