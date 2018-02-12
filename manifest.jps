@@ -1,0 +1,44 @@
+type: install
+version: 1.4
+name: Docker Registry
+displayName: Docker Registry
+homepage: https://docs.docker.com/registry/
+logo: https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/images/docker_registry.png
+description: Docker Registry for images storage
+ssl: true
+
+globals:
+  REGISTRY_USER: ${user.email}
+  REGISTRY_PASS: ${fn.password}
+
+nodes:
+  - image: registry:latest
+    count: 1
+    fixedCloudlets: 2
+    cloudlets: 16
+    nodeGroup: cp
+    volumes:
+      - /etc/docker/registry
+
+onInstall:
+  - cmd[cp]:
+    - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
+    - htpasswd -cB ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
+
+success: |
+  # Your Docker Registry is ready
+
+  **URL**: ${env.url}
+
+  **Username**: ${globals.REGISTRY_USER}
+
+  **Password**: ${globals.REGISTRY_PASS}
+
+  Example:
+
+  ```
+  docker pull alpine
+  docker tag alpine ${env.url}/myalpine
+  docker login ${env.url} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
+  docker push ${env.url}/myalpine
+  ```
