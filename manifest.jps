@@ -17,9 +17,6 @@ nodes:
     fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
-    env:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:80
-      REGISTRY_HTTP_TLS_LETSENCRYPT_CACHEFILE: /root/letsencrypt.json
     volumes:
       - /etc/docker/registry
       - /var/lib/registry
