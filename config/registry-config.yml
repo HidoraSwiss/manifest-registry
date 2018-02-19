@@ -13,9 +13,8 @@ http:
   headers:
     X-Content-Type-Options: [nosniff]
   tls:
-    letsencrypt:
-      cachefile: /root/letsencrypt.json
-      email: EMAIL
+    certificate: /root/certs/domains.crt
+    key: /root/certs/domain.key
 health:
   storagedriver:
     enabled: true
