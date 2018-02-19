@@ -8,9 +8,14 @@ storage:
   filesystem:
     rootdirectory: /var/lib/registry
 http:
-  addr: :5000
+  addr: :80 #:5000
+  host: HOST
   headers:
     X-Content-Type-Options: [nosniff]
+  tls:
+    letsencrypt:
+      cachefile: /root/letsencrypt.json
+      email: EMAIL
 health:
   storagedriver:
     enabled: true

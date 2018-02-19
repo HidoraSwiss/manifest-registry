@@ -17,6 +17,9 @@ nodes:
     fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
+    env:
+      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      REGISTRY_HTTP_TLS_LETSENCRYPT_CACHEFILE: /root/letsencrypt.json
     volumes:
       - /etc/docker/registry
       - /var/lib/registry
@@ -24,6 +27,7 @@ nodes:
 onInstall:
   - cmd[cp]:
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
+    - sed -i "s/HOST/https:\/\/${env.domain}/g" /etc/docker/registry/config.yml && sed -i "s/EMAIL/${user.email}/g" /etc/docker/registry/config.yml
     - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
 
   - api [cp]: jelastic.environment.control.RestartNodesByGroup
@@ -42,6 +46,6 @@ success: |
   ```
   docker pull alpine
   docker tag alpine ${env.domain}/myalpine
-  docker login ${env.domain} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
+  docker login https://${env.domain} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
   docker push ${env.domain}/myalpine
   ```
