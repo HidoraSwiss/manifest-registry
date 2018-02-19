@@ -8,13 +8,9 @@ storage:
   filesystem:
     rootdirectory: /var/lib/registry
 http:
-  addr: :443
-  host: HOST
+  addr: :5000
   headers:
     X-Content-Type-Options: [nosniff]
-  tls:
-    certificate: /root/certs/domain.crt
-    key: /root/certs/domain.key
 health:
   storagedriver:
     enabled: true
@@ -24,3 +20,4 @@ auth:
   htpasswd:
     realm: basic-realm
     path: /etc/docker/registry/htpasswd
+
