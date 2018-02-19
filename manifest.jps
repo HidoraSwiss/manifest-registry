@@ -17,6 +17,7 @@ nodes:
     fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
+    extip: true
     volumes:
       - /etc/docker/registry
       - /var/lib/registry
