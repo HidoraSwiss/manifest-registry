@@ -19,5 +19,5 @@ health:
 auth:
   htpasswd:
     realm: basic-realm
-    path: /etc/docker/registry/htpasswd
+    path: /root/htpasswd
 

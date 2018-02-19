@@ -42,6 +42,6 @@ success: |
   ```
   docker pull alpine
   docker tag alpine ${env.domain}/myalpine
-  docker login ${env.domain} -u ${globals.REGISTRY_USER} -p ${globals.REGISTRY_PASS}
+  docker login ${env.domain} -u ${globals.REGISTRY_USER} -p${globals.REGISTRY_PASS}
   docker push ${env.domain}/myalpine
   ```
