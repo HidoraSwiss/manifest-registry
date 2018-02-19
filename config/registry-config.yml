@@ -13,7 +13,7 @@ http:
   headers:
     X-Content-Type-Options: [nosniff]
   tls:
-    certificate: /root/certs/domains.crt
+    certificate: /root/certs/domain.crt
     key: /root/certs/domain.key
 health:
   storagedriver:

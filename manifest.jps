@@ -26,8 +26,11 @@ onInstall:
   - cmd[cp]:
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
     - sed -i "s/HOST/https:\/\/${env.domain}/g" /etc/docker/registry/config.yml
-    - mkdir -p /root/certs && openssl req -newkey rsa:4096 -nodes -sha256 -keyout /root/certs/domain.key -x509 -days 365 -out /root/certs/domain.crt
-    - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
+    - mkdir -p /root/certs
+    - openssl req -nodes -newkey rsa:4096 -keyout /root/certs/domain.key -out /root/certs/domain.csr -subj "/CN=${env.domain}"
+    - openssl x509 -in /root/certs/domain.csr -out /root/certs/domain.crt -req -signkey /root/certs/domain.key -days 3650
+    - openssl dhparam -out /root/certs/dhparam.pem 2048
+    - htpasswd -cBb /etc/docker/registry/htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
 
   - api [cp]: jelastic.environment.control.RestartNodesByGroup
 
@@ -39,6 +42,9 @@ success: |
   **Username**: ${globals.REGISTRY_USER}
 
   **Password**: ${globals.REGISTRY_PASS}
+  
+  > As we are using a self-signed certificate, you need to declare the certificat on client's side.
+  > Create the file (and its path) `/etc/docker/certs.d/${env.domain/ca.crt` and paste the content of `domain.crt` in it
 
   Example:
 
