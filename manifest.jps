@@ -5,7 +5,6 @@ displayName: Docker Registry
 homepage: https://docs.docker.com/registry/
 logo: https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/images/docker_registry.png
 description: Docker Registry for images storage
-ssl: true
 
 globals:
   REGISTRY_USER: ${user.email}
@@ -17,6 +16,7 @@ nodes:
     fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
+    extip: true
     volumes:
       - /etc/docker/registry
       - /var/lib/registry
@@ -25,6 +25,10 @@ onInstall:
   - cmd[cp]:
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
     - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
+    - apk add --no-cache certbot
+    - killall registry
+    - certbot certonly --standalone -d ${env.domain} --agree-tos --email ${user.email}
+    - /entrypoint.sh /etc/docker/registry/config.yml > /var/log/run.log &
 
   - api [cp]: jelastic.environment.control.RestartNodesByGroup
 

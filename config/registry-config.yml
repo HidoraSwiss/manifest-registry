@@ -8,9 +8,12 @@ storage:
   filesystem:
     rootdirectory: /var/lib/registry
 http:
-  addr: :5000
+  addr: :443
   headers:
     X-Content-Type-Options: [nosniff]
+  tls:
+    certificate: /etc/letsencrypt/live/reg-test.hidora.com/fullchain.pem
+    key: /etc/letsencrypt/live/reg-test.hidora.com/privkey.pem
 health:
   storagedriver:
     enabled: true
