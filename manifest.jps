@@ -29,8 +29,7 @@ onInstall:
     - apk add --no-cache certbot
     - killall registry
     - certbot certonly --non-interactive --standalone -d ${env.domain} --agree-tos --email ${user.email}
-
-  - api [cp]: jelastic.environment.control.RestartNodesByGroup
+    - reboot
 
 success: |
   Your Docker Registry will be ready in about 10 minutes.
