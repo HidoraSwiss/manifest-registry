@@ -24,11 +24,11 @@ nodes:
 onInstall:
   - cmd[cp]:
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
+    - sed -i "s/SERVER_NAME/${env.domain}/g" /etc/docker/registry/config.yml
     - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
     - apk add --no-cache certbot
     - killall registry
-    - certbot certonly --standalone -d ${env.domain} --agree-tos --email ${user.email}
-    - /entrypoint.sh /etc/docker/registry/config.yml > /var/log/run.log &
+    - certbot certonly --non-interactive --standalone -d ${env.domain} --agree-tos --email ${user.email}
 
   - api [cp]: jelastic.environment.control.RestartNodesByGroup
 

@@ -12,8 +12,8 @@ http:
   headers:
     X-Content-Type-Options: [nosniff]
   tls:
-    certificate: /etc/letsencrypt/live/reg-test.hidora.com/fullchain.pem
-    key: /etc/letsencrypt/live/reg-test.hidora.com/privkey.pem
+    certificate: /etc/letsencrypt/live/SERVER_NAME/fullchain.pem
+    key: /etc/letsencrypt/live/SERVER_NAME/privkey.pem
 health:
   storagedriver:
     enabled: true
