@@ -5,7 +5,6 @@ displayName: Docker Registry
 homepage: https://docs.docker.com/registry/
 logo: https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/images/docker_registry.png
 description: Docker Registry for images storage
-ssl: true
 
 globals:
   REGISTRY_USER: ${user.email}
@@ -17,16 +16,20 @@ nodes:
     fixedCloudlets: 1
     cloudlets: 16
     nodeGroup: cp
+    extip: true
     volumes:
       - /etc/docker/registry
       - /var/lib/registry
 
 onInstall:
   - cmd[cp]:
+    - apk add --no-cache grep certbot openssl && update-ca-certificates
     - wget -O /etc/docker/registry/config.yml https://raw.githubusercontent.com/HidoraSwiss/manifest-registry/master/config/registry-config.yml
+    - sed -i "s/SERVER_NAME/${env.domain}/g" /etc/docker/registry/config.yml
     - htpasswd -cBb ./htpasswd ${globals.REGISTRY_USER} ${globals.REGISTRY_PASS}
-
-  - api [cp]: jelastic.environment.control.RestartNodesByGroup
+    - killall registry
+    - certbot certonly --non-interactive --standalone -d ${env.domain} --agree-tos --email ${user.email}
+    - reboot
 
 success: |
   Your Docker Registry will be ready in about 10 minutes.
@@ -45,3 +48,4 @@ success: |
   docker login ${env.domain} -u ${globals.REGISTRY_USER} -p${globals.REGISTRY_PASS}
   docker push ${env.domain}/myalpine
   ```
+
