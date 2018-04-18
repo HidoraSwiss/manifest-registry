@@ -8,9 +8,12 @@ storage:
   filesystem:
     rootdirectory: /var/lib/registry
 http:
-  addr: :5000
+  addr: :443
   headers:
     X-Content-Type-Options: [nosniff]
+  tls:
+    certificate: /etc/letsencrypt/live/SERVER_NAME/fullchain.pem
+    key: /etc/letsencrypt/live/SERVER_NAME/privkey.pem
 health:
   storagedriver:
     enabled: true
